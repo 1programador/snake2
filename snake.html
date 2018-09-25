@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Jogo da cobrinha</title>
+</head>
+<body>
+
+	<canvas id="stage" width="600" height="600"></canvas>
+	<script type="text/javascript">
+		
+		window.onload = function() {
+				
+				var stage = document.getElementById('stage');
+				var ctx = stage.getContext('2d');
+				document.addEventListener("keydown", keyPush);
+				//define um intervalo para uma função ser chamada várias vezes com tal intervalo
+				setInterval(game, 80);
+
+				const vel =  1;
+				var vx = vy = 0;
+				var px = 10;
+				var py = 15;
+				var tp = 20;
+				var qp = 30;
+				var ax = ay = 15;
+				var trail = [];
+				tail = 5;
+
+			
+
+
+			function game() {
+				//função para ela não sair da tela e fazer loop cada vez que bater nas bordas
+				px += vx;
+				py += vy;
+
+				if (px < 0) {
+					px = qp - 1;
+				}
+				if(px > qp - 1){
+					px = 0;
+				}
+				if (py < 0) {
+					py = qp - 1;
+				}
+				if(py > qp - 1){
+					py = 0;
+				}
+
+
+
+
+			//cor do quadro
+			ctx.fillStyle = "black";
+			ctx.fillRect(0,0, stage.width, stage.height);
+ 			
+ 			//cor, tamanho e posição da maçã
+			ctx.fillStyle = "red";
+			//posição ax=15, tp = 20; será 15*20, que resultará em um lugar aleatorio
+			ctx.fillRect(ax*tp, ay*tp, tp, tp);			
+			//cobra
+			ctx.fillStyle = "gray";
+			for (var i = 0; i < trail.length; i++) {
+				//pintando posição do elemento e do rastro 
+				ctx.fillRect(trail[i].x * tp, trail[i].y * tp, tp-1, tp-1);
+				//se o rabo da cobra está na mesma posição que a cabeça
+				if (trail[i].x == px && trail[i].y == py) {
+					vx= vy = 0;
+					tail = 5;
+				}
+			}
+			//criando um objeto para que tenha um elemento x(que é a posição atual de x) e y(que é a posição atual de y) para desenhar o rastro na tela
+			//push - retira o  ultimo elemento no lugar do array
+			trail.push({x:px, y:py})
+			//shift -  retira o primeiro elemento do array, se for maior que a cauda 
+			while(trail.length > tail){
+				trail.shift();
+			}
+			//aumentar a cauda
+			if(ax == px && ay == py){
+				tail++;
+				//mudar a maçã para outro lugar do tabuleiro
+				ax = Math.floor(Math.random()*qp);
+				ay = Math.floor(Math.random()*qp);
+			}
+		}
+
+		//movimentação referente as teclas
+		function keyPush(event){
+
+			switch(event.keyCode){
+				case 37: //Left
+				vx = -vel;
+				vy = 0;
+				break;
+
+				case 38: //up
+				vx = 0;
+				vy = -vel;
+				break;
+				
+				case 39: //Rigth
+				vx = vel;
+				vy = 0;
+				break;
+				
+				case 40: //Down
+				vx = 0;
+				vy = vel;	
+				break;
+				default:
+
+				break;
+			}
+
+
+
+		}
+
+
+	}
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
